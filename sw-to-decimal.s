@@ -4,14 +4,34 @@ _start:
     movia   r2, 0xff200020  # Seven-segment MMIO
     movia   r3, 0xff200040  # Switches MMIO
     movia   r4, NUMS        # base address of digits array
-
-    ######
-    # Example code to display a digit (6) on the seven-segment display
-    ######
-    ldb     r5, 6(r4)       # read byte from NUMS[6]
-    stwio   r5, 0(r2)       # write to 7-seg display
-
+    movi    r7, 10
     break
+
+Loop:
+    ldwio    r5, 0(r3)
+    mov    r8, r0
+    movi    r9, r0
+
+Extract:
+    divu    r10, r5, r7
+    mul    r11, r10, r7
+    sub    r12, r5, r11
+
+    add    r13, r4, r12
+    ldb    r14, 0(r130
+
+    sll    r14, r14, r9
+    or    r8, r8, r14
+
+    mov    r5, r19
+    addi    r9, r9, 8
+
+    bne    r5, r0, Extract
+
+write_display:
+    stwio    r8, 0(r2)
+    br Loop
+    
 .data
 NUMS:
     .byte   0b00111111  # 0
